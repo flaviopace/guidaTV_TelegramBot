@@ -19,6 +19,7 @@ bot.
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
+from parser import htmlparser
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -31,17 +32,29 @@ logger = logging.getLogger(__name__)
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
     """Send a message when the command /start is issued."""
-    update.message.reply_text(update.message.from_user.full_name)
-
+    update.message.reply_text("Benvenuto " + update.message.from_user.full_name)
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text('/serata -> per sapere i programmi TV della serata')
 
 
 def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
+
+def serata(bot, update):
+    update.message.reply_text("Sto processando le informazioni...")
+    hp = htmlparser("https://hyle.appspot.com/palinsesto/serata")
+
+    programlist = hp.getPalimpsest()
+
+    for key,values in programlist.iteritems():
+        update.message.reply_text("Emittente: {}".format(key))
+        for i in range(0,len(values),2):
+            update.message.reply_text("{} : {}".format(values[i], values[i + 1]))
+
+
 
 
 def error(bot, update, error):
@@ -60,6 +73,8 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("serata", serata))
+
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))

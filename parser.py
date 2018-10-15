@@ -3,7 +3,7 @@ import requests
 
 tvguide = {}
 
-class htmlparser():
+class htmlparser:
 
     def __init__(self, url):
         self.pageurl = url
