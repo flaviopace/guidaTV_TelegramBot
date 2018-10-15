@@ -52,7 +52,8 @@ def serata(bot, update):
     for key,values in programlist.iteritems():
         update.message.reply_text("Emittente: {}".format(key))
         for i in range(0,len(values),2):
-            update.message.reply_text("{} : {}".format(values[i], values[i + 1]))
+            update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
+                                                       values[i + 1].encode('utf-8').strip()))
 
 
 
