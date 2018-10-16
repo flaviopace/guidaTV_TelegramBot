@@ -36,7 +36,9 @@ def start(bot, update):
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('/serata -> per sapere i programmi TV della serata')
+    update.message.reply_text('/serata -> per sapere i programmi TV di tutte le emittenti televisive per la serata')
+    update.message.reply_text('/serata Rai 1-> per sapere i programmi TV della serata per il sole canale Rai 1')
+    update.message.reply_text('/serata Rai 2-> per sapere i programmi TV della serata per il sole canale Rai 2')
 
 
 def echo(bot, update):
