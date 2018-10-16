@@ -29,6 +29,8 @@ class htmlparser:
                 #print value
                 channelevent.append(value)
                 value = event.span.contents[1].strip()
+                if not value:
+                    value = event.span.strong.text.strip()
                 channelevent.append(value)
                 #print value
                 #print ""
