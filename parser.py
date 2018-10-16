@@ -18,12 +18,13 @@ class htmlparser:
 
         soup = BeautifulSoup(page.text)
 
-        #print(soup.prettify())
+        index = 1
 
         for channel in soup.findAll('div', {'class': 'g3'}):
             key = channel.find('h3').contents[0]
             #print key
             channelevent = []
+            channelevent.append(key)
             for event in channel.findAll('li'):
                 value = event.span.b.text
                 #print value
@@ -35,7 +36,8 @@ class htmlparser:
                 #print value
                 #print ""
 
-            tvguide[key] = channelevent
+            tvguide[index] = channelevent
+            index = index + 1
 
         return tvguide
 
