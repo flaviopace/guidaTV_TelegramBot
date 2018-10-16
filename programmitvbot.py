@@ -43,17 +43,33 @@ def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
-def serata(bot, update):
+def serata(bot, update, args):
     update.message.reply_text("Sto processando le informazioni...")
     hp = htmlparser("https://hyle.appspot.com/palinsesto/serata")
 
     programlist = hp.getPalimpsest()
 
-    for key,values in programlist.iteritems():
-        update.message.reply_text("Emittente: {}".format(values[0]))
-        for i in range(1,len(values),2):
-            update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
-                                                       values[i + 1].encode('utf-8').strip()))
+    channelreq =  ' '.join(args).lower()
+
+    if not channelreq:
+        for key,values in programlist.iteritems():
+            update.message.reply_text("Emittente: {}".format(values[0]))
+            for i in range(1,len(values),2):
+                update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
+                                                           values[i + 1].encode('utf-8').strip()))
+    else:
+        channelnotfound = True
+        # user requested a channel
+        for key, values in programlist.iteritems():
+            if values[0].lower() == channelreq:
+                channelnotfound = False
+                update.message.reply_text("Emittente scelta: {}".format(values[0]))
+                for i in range(1, len(values), 2):
+                    update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
+                                                               values[i + 1].encode('utf-8').strip()))
+
+        if channelnotfound:
+            update.message.reply_text("Emittente {} non trovata!".format(channelreq))
 
 
 
@@ -74,7 +90,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("serata", serata))
+    dp.add_handler(CommandHandler("serata", serata, pass_args=True))
 
 
     # on noncommand i.e message - echo the message on Telegram
