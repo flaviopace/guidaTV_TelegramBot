@@ -20,8 +20,12 @@ class htmlparser:
 
         index = 1
 
-        for channel in soup.findAll('div', {'class': 'g3'}):
-            key = channel.find('h3').contents[0]
+        for channel in soup.findAll('div', {'class': ["g3", "g3 bet", "g3 ad"]}):
+            try:
+                key = channel.find('h3').contents[0]
+            except:
+                continue
+
             #print key
             channelevent = []
             channelevent.append(key)
