@@ -37,28 +37,29 @@ def start(bot, update):
 def help(bot, update):
     """Send a message when the command /help is issued."""
     update.message.reply_text('/serata -> per sapere i programmi TV di tutte le emittenti televisive per la serata')
-    update.message.reply_text('/serata Rai 1-> per sapere i programmi TV della serata per il sole canale Rai 1')
-    update.message.reply_text('/serata Rai 2-> per sapere i programmi TV della serata per il sole canale Rai 2')
+    update.message.reply_text('/serata Rai 1-> per sapere i programmi TV della serata per il solo canale Rai 1')
+    update.message.reply_text('/serata Rai 2-> per sapere i programmi TV della serata per il solo canale Rai 2')
+    update.message.reply_text('/pomeriggio -> per sapere i programmi TV di tutte le emittenti televisive per il pomeriggio')
+    update.message.reply_text('/pomeriggio Italia 1 -> per sapere i programmi TV del pomeriggio per il solo canale Italia 1')
+    update.message.reply_text('/mattinata -> per sapere i programmi TV di tutte le emittenti televisive per la mattinata')
+
     update.message.reply_text('...')
 
 
+def callparser(update, args, url):
 
-def echo(bot, update):
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
-
-def serata(bot, update, args):
     update.message.reply_text("Sto processando le informazioni...")
-    hp = htmlparser("https://hyle.appspot.com/palinsesto/serata")
+
+    hp = htmlparser(url)
 
     programlist = hp.getPalimpsest()
 
-    channelreq =  ' '.join(args).lower()
+    channelreq = ' '.join(args).lower()
 
     if not channelreq:
-        for key,values in programlist.iteritems():
+        for key, values in programlist.iteritems():
             update.message.reply_text("Emittente: {}".format(values[0]))
-            for i in range(1,len(values),2):
+            for i in range(1, len(values), 2):
                 update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
                                                            values[i + 1].encode('utf-8').strip()))
     else:
@@ -75,8 +76,21 @@ def serata(bot, update, args):
         if channelnotfound:
             update.message.reply_text("Emittente {} non trovata!".format(channelreq))
 
+def echo(bot, update):
+    """Echo the user message."""
+    update.message.reply_text(update.message.text)
 
+def serata(bot, update, args):
 
+    callparser(update, args, "https://hyle.appspot.com/palinsesto/serata")
+
+def pomeriggio(bot, update, args):
+
+    callparser(update, args, "https://hyle.appspot.com/palinsesto/pomeriggio")
+
+def mattina(bot, update, args):
+
+    callparser(update, args, "https://hyle.appspot.com/palinsesto/mattina")
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
@@ -95,7 +109,8 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("serata", serata, pass_args=True))
-
+    dp.add_handler(CommandHandler("pomeriggio", pomeriggio, pass_args=True))
+    dp.add_handler(CommandHandler("mattina", mattina, pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
