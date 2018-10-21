@@ -20,6 +20,8 @@ bot.
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 from parser import htmlparser
+from parser import superguidatvtvparser
+
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -50,7 +52,12 @@ def callparser(update, args, url):
 
     update.message.reply_text("Sto processando le informazioni...")
 
-    hp = htmlparser(url)
+    if 'serata' in url:
+        hp = superguidatvtvparser(url)
+        stepinclist = 3
+    else:
+        hp = htmlparser(url)
+        stepinclist = 2
 
     programlist = hp.getPalimpsest()
 
@@ -59,8 +66,14 @@ def callparser(update, args, url):
     if not channelreq:
         for key, values in programlist.iteritems():
             update.message.reply_text("Emittente: {}".format(values[0]))
-            for i in range(1, len(values), 2):
-                update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
+            for i in range(1, len(values), stepinclist):
+                if stepinclist != 2:
+                    update.message.reply_text("{} : {} - {}".format(values[i].encode('utf-8').strip(),
+                                                                    values[i + 1].encode('utf-8').strip(),
+                                                                    values[i + 2].encode('utf-8').strip())
+                                              )
+                else:
+                    update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
                                                            values[i + 1].encode('utf-8').strip()))
     else:
         channelnotfound = True
@@ -69,9 +82,16 @@ def callparser(update, args, url):
             if values[0].lower() == channelreq:
                 channelnotfound = False
                 update.message.reply_text("Emittente scelta: {}".format(values[0]))
-                for i in range(1, len(values), 2):
-                    update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
-                                                               values[i + 1].encode('utf-8').strip()))
+                for i in range(1, len(values), stepinclist):
+                    if stepinclist != 2:
+                        update.message.reply_text("{} : {} - {}".format(values[i].encode('utf-8').strip(),
+                                                                        values[i + 1].encode('utf-8').strip(),
+                                                                        values[i + 2].encode('utf-8').strip())
+                                                  )
+                    else:
+                        update.message.reply_text("{} : {}".format(values[i].encode('utf-8').strip(),
+                                                                   values[i + 1].encode('utf-8').strip()))
+
 
         if channelnotfound:
             update.message.reply_text("Emittente {} non trovata!".format(channelreq))
@@ -82,7 +102,7 @@ def echo(bot, update):
 
 def serata(bot, update, args):
 
-    callparser(update, args, "https://hyle.appspot.com/palinsesto/serata")
+    callparser(update, args, "https://www.superguidatv.it/serata/")
 
 def pomeriggio(bot, update, args):
 
