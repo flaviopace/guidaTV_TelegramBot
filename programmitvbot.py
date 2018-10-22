@@ -29,6 +29,15 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+urllist = [
+    'https://www.superguidatv.it/serata/oggi/premium/',
+
+    'https://www.superguidatv.it/serata/oggi/sky-cinema/',
+
+    'https://www.superguidatv.it/serata/oggi/sky-sport/',
+
+    'https://www.superguidatv.it/serata/oggi/sky-intrattenimento/',
+]
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -38,12 +47,23 @@ def start(bot, update):
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('/serata -> per sapere i programmi TV di tutte le emittenti televisive per la serata')
+    update.message.reply_text('/serata -> per sapere i programmi TV di tutte le emittenti televisive (Nazionali, '
+                              'Mediaset Premium, Sky Cinema, Sky Sport e Sky Intrattenimento per la serata')
     update.message.reply_text('/serata Rai 1-> per sapere i programmi TV della serata per il solo canale Rai 1')
-    update.message.reply_text('/serata Rai 2-> per sapere i programmi TV della serata per il solo canale Rai 2')
-    update.message.reply_text('/pomeriggio -> per sapere i programmi TV di tutte le emittenti televisive per il pomeriggio')
-    update.message.reply_text('/pomeriggio Italia 1 -> per sapere i programmi TV del pomeriggio per il solo canale Italia 1')
-    update.message.reply_text('/mattinata -> per sapere i programmi TV di tutte le emittenti televisive per la mattinata')
+    update.message.reply_text('/serata Sky Passion-> per sapere i programmi TV della serata per il solo canale Sky '
+                              'Passion')
+    update.message.reply_text('/serata Premium Action -> per sapere i programmi TV della serata per il solo canale '
+                              'Premium Action')
+    update.message.reply_text('/serata Premium -> per sapere i programmi di Mediaset Premium')
+    update.message.reply_text('/serata Sky-Cinema -> per sapere i programmi di Sky Cinema')
+    update.message.reply_text('/serata Sky-Sport -> per sapere i programmi di Sky Sport')
+    update.message.reply_text('/serata Sky-Intrattenimaneto -> per sapere i programmi di Sky Intrattenimento')
+    update.message.reply_text('/pomeriggio -> per sapere i programmi TV di tutte le emittenti televisive per il '
+                              'pomeriggio')
+    update.message.reply_text('/pomeriggio Italia 1 -> per sapere i programmi TV del pomeriggio per il solo canale '
+                              'Italia 1')
+    update.message.reply_text('/mattinata -> per sapere i programmi TV di tutte le emittenti televisive per la'
+                              ' mattinata')
 
     update.message.reply_text('...')
 
@@ -79,7 +99,7 @@ def callparser(update, args, url):
         channelnotfound = True
         # user requested a channel
         for key, values in programlist.iteritems():
-            if values[0].lower() == channelreq:
+            if channelreq in values[0].lower():
                 channelnotfound = False
                 update.message.reply_text("Emittente scelta: {}".format(values[0]))
                 for i in range(1, len(values), stepinclist):
@@ -102,7 +122,26 @@ def echo(bot, update):
 
 def serata(bot, update, args):
 
+    if len(args) > 0:
+        for singleurl in urllist:
+            if args[0].lower() in singleurl:
+                args.remove(args[0])
+                callparser(update, args, singleurl)
+                return
+
+
     callparser(update, args, "https://www.superguidatv.it/serata/")
+
+    callparser(update, args, "https://www.superguidatv.it/serata/oggi/premium/")
+
+    callparser(update, args, "https://www.superguidatv.it/serata/oggi/sky-cinema/")
+
+    callparser(update, args, "https://www.superguidatv.it/serata/oggi/sky-sport/")
+
+    callparser(update, args, "https://www.superguidatv.it/serata/oggi/sky-intrattenimento/")
+
+
+
 
 def pomeriggio(bot, update, args):
 
