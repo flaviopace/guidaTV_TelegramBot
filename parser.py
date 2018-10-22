@@ -121,6 +121,9 @@ class superguidatvtvparser:
             tvguide[index] = channelevent
             index = index + 1
 
+            if index >= 26:
+                break
+
         return tvguide
 
 
