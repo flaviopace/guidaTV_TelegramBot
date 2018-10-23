@@ -116,6 +116,42 @@ def callparser(update, args, url):
         if channelnotfound:
             update.message.reply_text("Emittente {} non trovata!".format(channelreq))
 
+def callfilmparser(update, args, url):
+
+    update.message.reply_text("Sto processando le informazioni...")
+
+    hp = superguidatvtvparser(url)
+    stepinclist = 4
+
+    programlist = hp.getPalimpsest()
+
+    channelreq = ' '.join(args).lower()
+
+    if not channelreq:
+        for key, values in programlist.iteritems():
+            update.message.reply_text("-- Emittente: {}".format(values[0]))
+            for i in range(1, len(values)):
+                update.message.reply_text("{}".format(values[i].replace("&nbsp;", "")))
+
+    else:
+        channelnotfound = True
+        # user requested a channel
+        for key, values in programlist.iteritems():
+            if channelreq in values[0].lower():
+                channelnotfound = False
+                update.message.reply_text("Emittente scelta: {}".format(values[0]))
+                for i in range(1, len(values), stepinclist):
+                    update.message.reply_text("{} : {} - {}".format(values[i].encode('utf-8').strip(),
+                                                                    values[i + 1].encode('utf-8').strip(),
+                                                                    values[i + 2].encode('utf-8').strip(),
+                                                                    values[i + 3].encode('utf-8').strip())
+                                                  )
+
+
+        if channelnotfound:
+            update.message.reply_text("Emittente {} non trovata!".format(channelreq))
+
+
 def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
@@ -141,7 +177,9 @@ def serata(bot, update, args):
     callparser(update, args, "https://www.superguidatv.it/serata/oggi/sky-intrattenimento/")
 
 
+def film(bot, update, args):
 
+    callfilmparser(update, args, "https://www.superguidatv.it/film-in-tv/oggi/nazionali/serata/")
 
 def pomeriggio(bot, update, args):
 
@@ -170,6 +208,8 @@ def main():
     dp.add_handler(CommandHandler("serata", serata, pass_args=True))
     dp.add_handler(CommandHandler("pomeriggio", pomeriggio, pass_args=True))
     dp.add_handler(CommandHandler("mattina", mattina, pass_args=True))
+    dp.add_handler(CommandHandler("film", film, pass_args=True))
+
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
