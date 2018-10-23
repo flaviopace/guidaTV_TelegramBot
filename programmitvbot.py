@@ -47,6 +47,8 @@ def start(bot, update):
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
+    update.message.reply_text('/film -> per sapere i film in programmazione di tutte le emittenti televisive (Nazionali, '
+                              'Mediaset Premium, Sky Cinema, Sky Sport e Sky Intrattenimento per la serata')
     update.message.reply_text('/serata -> per sapere i programmi TV di tutte le emittenti televisive (Nazionali, '
                               'Mediaset Premium, Sky Cinema, Sky Sport e Sky Intrattenimento per la serata')
     update.message.reply_text('/serata Rai 1-> per sapere i programmi TV della serata per il solo canale Rai 1')
@@ -140,12 +142,9 @@ def callfilmparser(update, args, url):
             if channelreq in values[0].lower():
                 channelnotfound = False
                 update.message.reply_text("Emittente scelta: {}".format(values[0]))
-                for i in range(1, len(values), stepinclist):
-                    update.message.reply_text("{} : {} - {}".format(values[i].encode('utf-8').strip(),
-                                                                    values[i + 1].encode('utf-8').strip(),
-                                                                    values[i + 2].encode('utf-8').strip(),
-                                                                    values[i + 3].encode('utf-8').strip())
-                                                  )
+                for i in range(1, len(values)):
+                    update.message.reply_text("{}".format(values[i].replace("&nbsp;", "")))
+
 
 
         if channelnotfound:
