@@ -119,7 +119,7 @@ class superguidatvtvparser:
                 channelevent.append(div.find('span', {'class': 'sgtvfullfilmview_spanTitleMovie'}).getText().encode('utf-8'))
 
                 for filmdetails in div.findAll('span', {'class': 'sgtvfullfilmview_spanDirectorGenresMovie'}):
-                    channelevent.append(filmdetails.getText())
+                    channelevent.append(filmdetails.getText().encode('utf-8'))
 
                 parental = div.find('div', {'class': 'sgtvfullfilmview_divContainerParentalLevel'})
                 demo =  div.find('img', {'class':'sgtvfullfilmview_imageParentalControl'}).get('src')
