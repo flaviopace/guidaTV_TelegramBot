@@ -153,7 +153,14 @@ def callfilmparser(update, args, url):
 
 def echo(bot, update):
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    update.message.reply_text('[flavio](https://www.vitadastudente.it/)')
+
+    update.message.reply_html('Test for &lt;<b>bold</b>, <i>ita_lic</i>, <code>code</code>, '
+                            '<a href="http://github.com/">links</a>, '
+                            '<a href="tg://user?id=123456789">text-mention</a> and '
+                            '<pre>pre</pre>. http://google.com')
+
+    update.message.reply_markdown('[flavio](https://www.vitadastudente.it/)')
 
 def serata(bot, update, args):
 
