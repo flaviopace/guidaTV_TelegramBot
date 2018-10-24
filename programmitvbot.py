@@ -39,6 +39,16 @@ urllist = [
     'https://www.superguidatv.it/serata/oggi/sky-intrattenimento/',
 ]
 
+filmurllist = [
+    'https://www.superguidatv.it/film-in-tv/oggi/nazionali/serata/',
+
+    'https://www.superguidatv.it/film-in-tv/oggi/premium/serata/',
+
+    'https://www.superguidatv.it/film-in-tv/oggi/sky-cinema/serata/',
+
+    'https://www.superguidatv.it/film-in-tv/oggi/sky-intrattenimento/serata/',
+]
+
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
@@ -184,6 +194,14 @@ def serata(bot, update, args):
 
 
 def film(bot, update, args):
+
+    if len(args) > 0:
+        for singleurl in filmurllist:
+            if args[0].lower() in singleurl:
+                args.remove(args[0])
+                callfilmparser(update, args, singleurl)
+                return
+
 
     callfilmparser(update, args, "https://www.superguidatv.it/film-in-tv/oggi/nazionali/serata/")
 
